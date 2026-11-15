@@ -28,7 +28,7 @@ function Media({ p }: { p: Project }) {
 
 export default function Projects() {
   return (
-    <section id="projects" aria-labelledby="projects-title" className="mx-auto max-w-[1440px] px-4 pt-28 md:px-8 md:pt-40 lg:px-14">
+    <section id="projects" aria-labelledby="projects-title" className="overflow-x-clip mx-auto max-w-[1440px] px-4 pt-28 md:px-8 md:pt-40 lg:px-14">
       <div className="grid gap-8 lg:grid-cols-2 lg:items-end">
         <h2 id="projects-title" data-reveal className="text-[clamp(3.4rem,8vw,6.5rem)] leading-[0.9]">
           <span className="display chrome">Selected</span>{" "}

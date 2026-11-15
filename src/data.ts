@@ -13,6 +13,22 @@ export const site = {
   },
 };
 
+// Hero particle portrait. Particles are placed only inside `outline` (photo pixel
+// coordinates, traced around the person) so the photo's background is ignored.
+// If you change the photo, update width/height and redraw the outline.
+export const portrait = {
+  src: "/me.jpeg",
+  width: 960,
+  height: 1280,
+  outline: [
+    [390, 385], [440, 340], [500, 330], [550, 345], [580, 385], [585, 430], [560, 455], [555, 490],
+    [535, 515], [545, 548], [600, 575], [650, 605], [700, 650], [725, 720], [742, 820], [742, 900],
+    [735, 945], [700, 955], [672, 1000], [675, 1150], [668, 1230], [650, 1280], [300, 1280], [300, 1240],
+    [298, 1200], [295, 1100], [300, 960], [250, 910], [240, 860], [245, 780], [260, 700], [290, 640],
+    [340, 600], [390, 575], [430, 565], [440, 548], [425, 525], [408, 505], [405, 480], [380, 440], [385, 415],
+  ] as [number, number][],
+};
+
 export const nav = [
   { label: "About", href: "#about" },
   { label: "What I do", href: "#what-i-do" },
