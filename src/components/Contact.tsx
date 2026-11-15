@@ -1,5 +1,6 @@
 import { contact, site } from "@/data";
 import { Download, GitHub, LinkedIn, Mail } from "./icons";
+import Smoke from "./Smoke";
 
 const label = "text-xs tracking-[0.18em] text-mist";
 
@@ -8,8 +9,10 @@ export default function Contact() {
     <section
       id="contact"
       aria-labelledby="contact-title"
-      className="mt-28 bg-[radial-gradient(ellipse_70%_60%_at_30%_40%,#15171b_0%,transparent_70%)] py-24 md:mt-40 md:py-36"
+      // The gradient is the static fallback; the smoke canvas covers it when it runs.
+      className="relative isolate mt-28 bg-[radial-gradient(ellipse_70%_60%_at_30%_40%,#15171b_0%,transparent_70%)] py-24 md:mt-40 md:py-36"
     >
+      <Smoke />
       <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-4 md:px-8 lg:grid-cols-2 lg:gap-16 lg:px-14">
         <div>
           <p className="glass inline-flex items-center gap-2.5 rounded-full px-4 py-2 text-sm">
