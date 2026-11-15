@@ -43,7 +43,7 @@ export default function Experience() {
             {certifications.map((c) => (
               <li key={c.name} className="border-t border-line py-4">
                 <p className="font-medium">{c.name}</p>
-                <p className="mt-1 text-sm text-mist">{c.issuer}, Coursera</p>
+                <p className="mt-1 text-sm text-mist">{c.issuer}</p>
               </li>
             ))}
           </ul>

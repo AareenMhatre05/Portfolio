@@ -173,21 +173,20 @@ export const education = [
 ];
 
 export const experience = [
-  {
-    role: "AI Automation & Intelligent Solutions Intern",
-    org: "BharatCares, with AICTE & IBM SkillsBuild",
-    when: "Jun – Jul 2026",
-  },
   { role: "Marketing Executive", org: "CSI, St. Francis Institute of Technology", when: "2024 – 25" },
   { role: "Volunteer", org: "Prakalp Project Competition, St. Francis Institute of Technology", when: "2024" },
 ];
 
 export const certifications = [
-  { name: "AWS Cloud Technical Essentials", issuer: "Amazon Web Services" },
-  { name: "Introduction to Microsoft Azure Cloud Services", issuer: "Microsoft" },
-  { name: "Generative AI: Prompt Engineering Basics", issuer: "IBM" },
-  { name: "Programming for Everybody (Getting Started with Python)", issuer: "University of Michigan" },
-  { name: "Python Data Structures", issuer: "University of Michigan" },
+  {
+    name: "AI Automation & Intelligent Solutions training program",
+    issuer: "BharatCares, with AICTE & IBM SkillsBuild, Jun – Jul 2026",
+  },
+  { name: "AWS Cloud Technical Essentials", issuer: "Amazon Web Services, Coursera" },
+  { name: "Introduction to Microsoft Azure Cloud Services", issuer: "Microsoft, Coursera" },
+  { name: "Generative AI: Prompt Engineering Basics", issuer: "IBM, Coursera" },
+  { name: "Programming for Everybody (Getting Started with Python)", issuer: "University of Michigan, Coursera" },
+  { name: "Python Data Structures", issuer: "University of Michigan, Coursera" },
 ];
 
 export const contact = {
