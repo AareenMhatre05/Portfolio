@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #07080a;
+  --color-bone: #eceae4;
+  --color-steel: #5e6875;
+  --color-mist: #8e939b;
+  --color-sand: #d3cab7;
+  --color-line: rgb(255 255 255 / 0.08);
+
+  --font-display: var(--font-archivo), system-ui, sans-serif;
+  --font-sans: var(--font-instrument-sans), system-ui, sans-serif;
+  --font-serif: var(--font-instrument-serif), Georgia, serif;
+}
+
+html {
+  background: var(--color-ink);
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-bone);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--color-sand);
+  color: var(--color-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::after {
+    transition-duration: 0s !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-sand);
+  outline-offset: 3px;
+}
+
+/* Sections sit under the sticky navbar when jumped to. */
+section[id] {
+  scroll-margin-top: 4.5rem;
+}
+
+@layer components {
+  /* Huge heavy headings: off-white fading to steel grey. */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-stretch: 125%;
+    line-height: 0.88;
+    letter-spacing: -0.035em;
+  }
+  .chrome {
+    background: linear-gradient(180deg, var(--color-bone) 30%, var(--color-steel) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .glass {
+    background: rgb(255 255 255 / 0.035);
+    border: 1px solid var(--color-line);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 9999px;
+    padding: 0.7rem 1.35rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .pill-solid {
+    background: var(--color-sand);
+    color: var(--color-ink);
+  }
+  .pill-solid:hover {
+    background: var(--color-bone);
+  }
+  .pill-ghost {
+    border: 1px solid rgb(255 255 255 / 0.18);
+    color: var(--color-bone);
+  }
+  .pill-ghost:hover {
+    border-color: var(--color-bone);
+  }
+
+  /* Nav: underline the link whose section is in view (aria-current set by Motion.tsx). */
+  .nav-link {
+    position: relative;
+  }
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: -6px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .nav-link[aria-current="true"] {
+    color: var(--color-bone);
+  }
+  .nav-link[aria-current="true"]::after {
+    transform: scaleX(1);
+  }
+
+  /* Stack marquee: classes added by Motion.tsx only when motion is allowed. */
+  .marquee {
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  }
+  .marquee > ul {
+    flex-wrap: nowrap;
+    width: max-content;
+    padding-right: 0.625rem; /* = gap-2.5 in Skills.tsx, keeps the two halves equal */
+    will-change: transform;
+  }
+
+  /* Service accordion: native <details>, arrow points ↘ closed and ↗ open. */
+  .service summary::-webkit-details-marker {
+    display: none;
+  }
+  .service[open] .service-arrow {
+    transform: rotate(-90deg);
+  }
+}
