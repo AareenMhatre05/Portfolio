@@ -4,7 +4,8 @@ export const site = {
   name: "Aareen Mhatre",
   heroWord: "PORTFOLIO",
   role: { plain: "Backend & Data", italic: "developer" },
-  location: "Mumbai, India",  email: "aareenmhatre2005@gmail.com",
+  location: "Mumbai, India",
+  email: "aareenmhatre2005@gmail.com",
   // Put the file at public/resume.pdf so it is served at this path.
   resume: "/resume.pdf",
   links: {
@@ -40,9 +41,9 @@ export const nav = [
 export const about = {
   heading: "About",
   body: [
-    "I'm Aareen, a Computer Engineering student at St. Francis Institute of Technology in Mumbai.",
-    "I like the parts of software that sit under the screen: databases, backends and the cloud. Recently that has meant putting every access rule for a shop's apps inside Postgres and running Spark over 229 million messages on one laptop.",
-    "I work mostly in Python, SQL and JavaScript, pick up new tools quickly, and want to learn from real production work.",
+    "I'm Aareen, a Computer Engineering student at St. Francis Institute of Technology, Mumbai.",
+    "I'm interested in backend development, databases and cloud technologies, and I enjoy building reliable, well-structured systems that solve real problems.",
+    "I work mainly with Python, SQL and JavaScript, learn new tools quickly, and am looking for opportunities to apply my skills, contribute to real-world projects and grow as a developer.",
   ],
 };
 
