@@ -41,6 +41,10 @@ export const nav = [
 
 export const about = {
   heading: "About",
+  photo: {
+    src: "/about.jpg", // 550x688 (4:5); the phone frame in About.tsx uses that ratio
+    alt: "Aareen Mhatre outdoors in the sun, wearing sunglasses and a dark zip-up jacket over a striped polo shirt",
+  },
   body: [
     "I'm Aareen, a Computer Engineering student at St. Francis Institute of Technology, Mumbai.",
     "I'm interested in backend development, databases and cloud technologies, and I enjoy building reliable, well-structured systems that solve real problems.",
