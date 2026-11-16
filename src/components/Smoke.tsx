@@ -35,7 +35,11 @@ void main() {
   float f = fbm(uv + 3.5 * r);
   float smoke = smoothstep(0.42, 0.95, f);
   // Ink (#07080a) up to a dim steel grey: kept low so text and card stay readable.
-  vec3 col = mix(vec3(0.027, 0.031, 0.039), vec3(0.16, 0.165, 0.175), smoke * (0.6 + 0.4 * length(q)));
+  vec3 ink = vec3(0.027, 0.031, 0.039);
+  vec3 col = mix(ink, vec3(0.16, 0.165, 0.175), smoke * (0.6 + 0.4 * length(q)));
+  // Soft fade into the page at top and bottom, done here: a CSS mask on this canvas dropped frames while scrolling.
+  float y = gl_FragCoord.y / uRes.y;
+  col = mix(ink, col, smoothstep(0.0, 0.18, y) * smoothstep(1.0, 0.82, y));
   gl_FragColor = vec4(col, 1.0);
 }`;
 
@@ -131,7 +135,7 @@ export default function Smoke() {
       aria-hidden
       data-state="static"
       // Hidden until the first frame draws, so the CSS gradient shows in every fallback case.
-      className="pointer-events-none absolute inset-0 -z-10 size-full opacity-0 transition-opacity duration-1000 [mask-image:linear-gradient(transparent,#000_18%,#000_82%,transparent)] data-[state=paused]:opacity-100 data-[state=running]:opacity-100"
+      className="pointer-events-none absolute inset-0 -z-10 size-full opacity-0 transition-opacity duration-1000 data-[state=paused]:opacity-100 data-[state=running]:opacity-100"
     />
   );
 }
