@@ -10,34 +10,37 @@ export default function Experience() {
         Experience &amp;<br />education
       </h2>
 
-      <div className="mt-14 grid gap-12 md:grid-cols-2 lg:grid-cols-3 lg:gap-14">
-        <div>
-          <h3 className={colTitle}>Education</h3>
-          <ul className="mt-4">
-            {education.map((e) => (
-              <li key={e.school} className={row}>
-                <p className="text-lg font-semibold">{e.degree}</p>
-                <p className="mt-1 text-bone/75">{e.school}, {e.place}</p>
-                <p className="mt-2 text-sm text-mist">{e.when}</p>
-              </li>
-            ))}
-          </ul>
+      {/* Two columns: Education and Experience stacked left, Certifications right. */}
+      <div className="mt-14 grid gap-12 md:grid-cols-2 lg:gap-20">
+        <div className="space-y-12">
+          <div>
+            <h3 className={colTitle}>Education</h3>
+            <ul className="mt-4">
+              {education.map((e) => (
+                <li key={e.school} className={row}>
+                  <p className="text-lg font-semibold">{e.degree}</p>
+                  <p className="mt-1 text-bone/75">{e.school}, {e.place}</p>
+                  <p className="mt-2 text-sm text-mist">{e.when}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className={colTitle}>Experience</h3>
+            <ul className="mt-4">
+              {experience.map((e) => (
+                <li key={e.role + e.org} className={row}>
+                  <p className="text-lg font-semibold">{e.role}</p>
+                  <p className="mt-1 text-bone/75">{e.org}</p>
+                  {e.when && <p className="mt-2 text-sm text-mist">{e.when}</p>}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         <div>
-          <h3 className={colTitle}>Experience</h3>
-          <ul className="mt-4">
-            {experience.map((e) => (
-              <li key={e.role + e.org} className={row}>
-                <p className="text-lg font-semibold">{e.role}</p>
-                <p className="mt-1 text-bone/75">{e.org}</p>
-                {e.when && <p className="mt-2 text-sm text-mist">{e.when}</p>}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="md:col-span-2 lg:col-span-1">
           <h3 className={colTitle}>Certifications</h3>
           <ul className="mt-4">
             {certifications.map((c) => (
