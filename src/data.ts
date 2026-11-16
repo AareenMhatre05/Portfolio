@@ -24,12 +24,12 @@ export const site = {
 // If you switch to a differently framed photo, update the ratio and every box.
 export const portrait = {
   src: "/me.png",
-  width: 503,
-  height: 670,
-  crop: { x: 0.2386, y: 0.2507, width: 0.5467, height: 0.4657 },
-  head: { x: 0.3877, y: 0.2537, width: 0.2286, height: 0.1761 },
-  glasses: { x: 0.3976, y: 0.3313, width: 0.1491, height: 0.0373 },
-  shadow: { x: 0.5288, y: 0.8134, width: 0.4712, height: 0.1866 },
+  width: 960,
+  height: 1280,
+  crop: { x: 0.2382, y: 0.2509, width: 0.546, height: 0.4646 },
+  head: { x: 0.3872, y: 0.2539, width: 0.2283, height: 0.1757 },
+  glasses: { x: 0.3971, y: 0.3314, width: 0.1489, height: 0.0372 },
+  shadow: { x: 0.5208, y: 0.8086, width: 0.4792, height: 0.1914 },
 };
 
 export const nav = [
