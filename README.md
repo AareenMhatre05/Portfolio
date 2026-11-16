@@ -2,6 +2,8 @@
 
 My personal portfolio site: who I am, what I work on, the projects I've built, and how to reach me.
 
+**Live site: [aareen-mhatre-portfolio.vercel.app](https://aareen-mhatre-portfolio.vercel.app/)**
+
 ## What's on the site
 
 - **Hero:** a starfield that gathers into a dot-matrix portrait of me. Hover it (or tap on a phone) to reveal the photo.
