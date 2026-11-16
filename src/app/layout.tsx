@@ -27,9 +27,9 @@ export const metadata: Metadata = {
 };
 
 // Runs while the HTML is parsed, before first paint, so the intro covers the page without a flash.
-// Once per session, never for reduced motion; with JS off it never runs, so the intro never shows.
+// Every full page load, never for reduced motion; with JS off it never runs, so the intro never shows.
 // The timeout releases the page even if the app's JS fails to load.
-const introGate = `try{if(!sessionStorage.getItem("intro-seen")&&!matchMedia("(prefers-reduced-motion: reduce)").matches){sessionStorage.setItem("intro-seen","1");var d=document.documentElement;d.dataset.intro="play";window.__introFailsafe=setTimeout(function(){d.removeAttribute("data-intro");dispatchEvent(new Event("intro:done"))},7000)}}catch(e){}`;
+const introGate = `if(!matchMedia("(prefers-reduced-motion: reduce)").matches){var d=document.documentElement;d.dataset.intro="play";window.__introFailsafe=setTimeout(function(){d.removeAttribute("data-intro");dispatchEvent(new Event("intro:done"))},7000)}`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
