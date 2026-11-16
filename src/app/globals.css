@@ -146,6 +146,21 @@ section[id] {
     opacity: 0;
   }
 
+  /* Hero portrait fallback box: the same height, max width and top as the dot figure in HeroPortrait.tsx
+     (desktop 82% / 95% / 5%, phones 60% / 100% / 6% of the hero). The hero canvas wrapper is the container. */
+  .portrait-fallback {
+    --fh: 82cqh;
+    --fw: 95cqw;
+    --ft: 5cqh;
+  }
+  @container (width < 768px) {
+    .portrait-fallback {
+      --fh: 60cqh;
+      --fw: 100cqw;
+      --ft: 6cqh;
+    }
+  }
+
   /* Service accordion: native <details>, arrow points ↘ closed and ↗ open. */
   .service summary::-webkit-details-marker {
     display: none;
