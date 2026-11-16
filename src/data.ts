@@ -47,9 +47,9 @@ export const about = {
     alt: "Aareen Mhatre outdoors in the sun, wearing sunglasses and a dark zip-up jacket over a striped polo shirt",
   },
   body: [
-    "I'm Aareen, a Computer Engineering student at St. Francis Institute of Technology, Mumbai.",
+    "I'm Aareen, a final-year Computer Engineering student at St. Francis Institute of Technology, Mumbai.",
     "I'm interested in backend development, databases and cloud technologies, and I enjoy building reliable, well-structured systems that solve real problems.",
-    "I work mainly with Python, SQL and JavaScript, learn new tools quickly, and am looking for opportunities to apply my skills, contribute to real-world projects and grow as a developer.",
+    "I work mainly with Python and SQL, have hands-on experience with Generative AI, learn new tools quickly, and am looking for opportunities to apply my skills, contribute to real-world projects and grow as a developer.",
   ],
 };
 
