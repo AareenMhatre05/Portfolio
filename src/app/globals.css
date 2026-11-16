@@ -146,19 +146,33 @@ section[id] {
     opacity: 0;
   }
 
-  /* Hero portrait fallback box: the same height, max width and top as the dot figure in HeroPortrait.tsx
+  /* Hero portrait box: the same height, max width and top as the dot figure in HeroPortrait.tsx
      (desktop 82% / 95% / 5%, phones 60% / 100% / 6% of the hero). The hero canvas wrapper is the container. */
-  .portrait-fallback {
+  .portrait-box {
     --fh: 82cqh;
     --fw: 95cqw;
     --ft: 5cqh;
   }
   @container (width < 768px) {
-    .portrait-fallback {
+    .portrait-box {
       --fh: 60cqh;
       --fw: 100cqw;
       --ft: 6cqh;
     }
+  }
+  /* The real photo: dimmed static fallback, hidden while the dots run, full when revealed (later rule wins).
+     The revealed filter lifts the shadows so the black jacket and hair don't vanish into the background. */
+  .portrait-photo {
+    opacity: 0.2;
+    filter: grayscale(1);
+    transition: opacity 0.4s ease, filter 0.4s ease;
+  }
+  [data-state="running"] .portrait-photo {
+    opacity: 0;
+  }
+  [data-revealed] .portrait-photo {
+    opacity: 1;
+    filter: brightness(1.12) contrast(0.88);
   }
 
   /* Service accordion: native <details>, arrow points ↘ closed and ↗ open. */

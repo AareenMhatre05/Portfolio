@@ -15,20 +15,21 @@ export const site = {
 };
 
 // Hero particle portrait from a background-removed PNG: transparent pixels draw no dots.
-// All boxes are in photo pixel coordinates:
-// - crop: head to waist, the part drawn as dots
+// width/height: only their ratio is used (layout before the image loads), so a higher-resolution
+// export of the same framing needs no change here. All boxes are fractions of the image (0-1):
+// - crop: head to waist, the part drawn as dots and shown on reveal
 // - head: gets its own tone levels (hair dim, skin mid-to-light)
 // - glasses: dark pixels here become the darkest dots (the lenses are lighter than the hair in the photo)
 // - shadow: a leftover shadow blob whose near-black pixels are dropped
-// If you change the photo, update width/height and every box.
+// If you switch to a differently framed photo, update the ratio and every box.
 export const portrait = {
   src: "/me.png",
   width: 503,
   height: 670,
-  crop: { x: 120, y: 168, width: 275, height: 312 },
-  head: { x: 195, y: 170, width: 115, height: 118 },
-  glasses: { x: 200, y: 222, width: 75, height: 25 },
-  shadow: { x: 266, y: 545, width: 237, height: 125 },
+  crop: { x: 0.2386, y: 0.2507, width: 0.5467, height: 0.4657 },
+  head: { x: 0.3877, y: 0.2537, width: 0.2286, height: 0.1761 },
+  glasses: { x: 0.3976, y: 0.3313, width: 0.1491, height: 0.0373 },
+  shadow: { x: 0.5288, y: 0.8134, width: 0.4712, height: 0.1866 },
 };
 
 export const nav = [

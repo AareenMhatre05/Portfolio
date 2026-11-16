@@ -4,7 +4,7 @@
 // the photo, scatters from the pointer and drifts back. Runs only while the hero is on
 // screen. Reduced motion, no canvas or no JS show a static dimmed photo instead.
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { portrait } from "@/data";
 
 type P = { x: number; y: number; vx: number; vy: number; sx: number; sy: number; hx: number; hy: number; a: number; ha: number; delay: number; tw: number; star: boolean };
@@ -27,21 +27,24 @@ const BLACK = 20, WHITE = 235; // photo luminance (0-255) mapped to the dimmest 
 const LIFT = 0.75; // < 1 lifts midtones: face and hands land around 0.65, between jacket and shirt
 const SHADOW_LUM = 14; // inside portrait.shadow, pixels darker than this are the shadow blob (jacket is 22+)
 
+// The crop's on-screen width / height (boxes are image fractions, so the image's own ratio matters).
+const CROP_ASPECT = (portrait.crop.width / portrait.crop.height) * (portrait.width / portrait.height);
+
 // Sample the photo's crop rectangle. Returns home points (CSS px) with brightness alpha.
+// Works in image fractions, so the same boxes fit any resolution of the photo.
 function samplePortrait(img: HTMLImageElement, w: number, h: number, mobile: boolean, maxY: number) {
-  const { x, y, width, height } = portrait.crop;
-  const crop = { x, y, w: width, h: height };
+  const crop = { x: portrait.crop.x, y: portrait.crop.y, w: portrait.crop.width, h: portrait.crop.height };
   // Head and shoulders fill the area above the hero word; the waist fades out behind it.
   // Phones: as wide as the screen allows (arms reach the edges), so the head stays large.
   let ph = h * (mobile ? 0.6 : 0.82);
-  let pw = ph * (crop.w / crop.h);
+  let pw = ph * CROP_ASPECT;
   const maxW = w * (mobile ? 1 : 0.95);
-  if (pw > maxW) { pw = maxW; ph = pw * (crop.h / crop.w); }
+  if (pw > maxW) { pw = maxW; ph = pw / CROP_ASPECT; }
   const left = (w - pw) / 2, top = h * (mobile ? 0.06 : 0.05);
   // The crop sets the scale; below the waist, rows continue down to the fade line (or the photo's end),
   // so the figure always runs behind the hero word and fades out instead of stopping at a hard edge.
   const scale = ph / crop.h;
-  crop.h = Math.min(portrait.height - crop.y, (maxY - top) / scale);
+  crop.h = Math.min(1 - crop.y, (maxY - top) / scale);
   ph = crop.h * scale;
 
   const step = mobile ? 8 : 6; // grid spacing in CSS px: fewer particles on phones; ~10k on desktop keeps scrolling smooth
@@ -49,7 +52,10 @@ function samplePortrait(img: HTMLImageElement, w: number, h: number, mobile: boo
   const c = document.createElement("canvas");
   c.width = cols; c.height = rows;
   const ctx = c.getContext("2d", { willReadFrequently: true })!;
-  ctx.drawImage(img, crop.x, crop.y, crop.w, crop.h, 0, 0, cols, rows);
+  // Each cell averages its whole area; default smoothing samples sparsely when shrinking a large photo, which is noisy.
+  ctx.imageSmoothingQuality = "high";
+  const W = img.naturalWidth, H = img.naturalHeight;
+  ctx.drawImage(img, crop.x * W, crop.y * H, crop.w * W, crop.h * H, 0, 0, cols, rows);
   const data = ctx.getImageData(0, 0, cols, rows).data;
 
   const { shadow: sh, head: hd, glasses: gl } = portrait;
@@ -79,9 +85,22 @@ function samplePortrait(img: HTMLImageElement, w: number, h: number, mobile: boo
   return { pts, size: step * 0.55 };
 }
 
+const REVEAL_S = 0.4; // dots <-> photo cross-fade, matches the CSS transition on .portrait-photo
+const noop = () => () => {};
+
 export default function HeroPortrait() {
   const wrap = useRef<HTMLDivElement>(null);
   const ref = useRef<HTMLCanvasElement>(null);
+  const revealRef = useRef(false); // read by the animation loop
+  const [revealed, setRevealed] = useState(false);
+  const [hintGone, setHintGone] = useState(false);
+  // false on the server and during hydration, true after: the reveal control needs JS, so it renders only then.
+  const hydrated = useSyncExternalStore(noop, () => true, () => false);
+  const reveal = (on: boolean) => {
+    revealRef.current = on;
+    setRevealed(on);
+    if (on) setHintGone(true);
+  };
 
   useEffect(() => {
     const canvas = ref.current, box = wrap.current;
@@ -89,7 +108,7 @@ export default function HeroPortrait() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return; // static photo stays
 
-    let alive = true, raf = 0, last = 0, t = 0, size = 3, gathered = false;
+    let alive = true, raf = 0, last = 0, t = 0, size = 3, gathered = false, shown = 0; // shown: 1 = photo revealed
     let parts: P[] = [];
     let w = 0, h = 0;
     // Particles fade out below the hero word (keeps role line and buttons readable). Done per particle:
@@ -125,6 +144,7 @@ export default function HeroPortrait() {
     const frame = (now: number) => {
       const dt = Math.min(0.05, (now - (last || now)) / 1000);
       last = now; t += dt;
+      shown = Math.min(1, Math.max(0, shown + (revealRef.current ? dt : -dt) / REVEAL_S));
       const buckets: number[][] = Array.from({ length: BUCKETS }, () => []);
       for (let i = 0; i < parts.length; i++) {
         const p = parts[i];
@@ -143,7 +163,8 @@ export default function HeroPortrait() {
         const target = home ? p.ha : p.ha * (0.55 + 0.45 * Math.sin(t * 1.5 + p.tw)) * (p.star ? 1 : 0.6);
         p.a += (Math.min(target, t / 1.2) - p.a) * 0.08;
         const fade = p.y < fadeFrom ? 1 : p.y > fadeTo ? 0 : 1 - (p.y - fadeFrom) / (fadeTo - fadeFrom);
-        const b = Math.min(BUCKETS - 1, Math.round(p.a * fade * (BUCKETS - 1)));
+        const vis = p.star ? 1 : 1 - shown; // portrait dots give way to the photo; stars stay
+        const b = Math.min(BUCKETS - 1, Math.round(p.a * fade * vis * (BUCKETS - 1)));
         if (b > 0) buckets[b].push(i);
       }
       if (!gathered && t > GATHER_AT + 2.5) gathered = true;
@@ -198,18 +219,17 @@ export default function HeroPortrait() {
   }, []);
 
   const { crop } = portrait;
+  // The dot figure's head-to-waist box (sizes in .portrait-box, globals.css), shared by the photo and its toggle.
+  const box = {
+    aspectRatio: String(CROP_ASPECT),
+    height: `min(var(--fh), calc(var(--fw) / ${CROP_ASPECT}))`,
+    top: "var(--ft)",
+  };
   return (
-    <div ref={wrap} data-state="static" aria-hidden className="group pointer-events-none absolute inset-0 -z-10 [container-type:size]">
-      {/* Static fallback: dimmed photo, hidden once the particles run. Shows the same waist crop, at the same size
-          and position as the dot figure (sizes in .portrait-fallback, globals.css), in CSS so it works without JS. */}
-      <div
-        style={{
-          aspectRatio: `${crop.width} / ${crop.height}`,
-          height: `min(var(--fh), calc(var(--fw) * ${crop.height / crop.width}))`,
-          top: "var(--ft)",
-        }}
-        className="portrait-fallback absolute left-1/2 -translate-x-1/2 overflow-hidden opacity-20 grayscale [mask-image:linear-gradient(#000_65%,transparent)] group-data-[state=running]:opacity-0"
-      >
+    <div ref={wrap} data-state="static" data-revealed={revealed || undefined} className="group pointer-events-none absolute inset-0 -z-10 [container-type:size]">
+      {/* The real photo in the same box as the dots. Dimmed when it's the static fallback (reduced motion, no canvas,
+          no JS), hidden while the dots run, full and shadow-lifted when revealed. States in .portrait-photo. */}
+      <div aria-hidden style={box} className="portrait-box portrait-photo absolute left-1/2 -translate-x-1/2 overflow-hidden [mask-image:linear-gradient(#000_65%,transparent)]">
         <Image
           src={portrait.src}
           alt=""
@@ -218,15 +238,42 @@ export default function HeroPortrait() {
           // Same file the particle sampler loads, so the photo downloads once; above the fold, so eager.
           unoptimized
           loading="eager"
-          style={{ width: `${(portrait.width / crop.width) * 100}%`, left: `${(-crop.x / crop.width) * 100}%`, top: `${(-crop.y / crop.height) * 100}%` }}
+          style={{ width: `${100 / crop.width}%`, left: `${(-crop.x / crop.width) * 100}%`, top: `${(-crop.y / crop.height) * 100}%` }}
           className="absolute h-auto max-w-none"
         />
       </div>
       {/* Fades out below the hero word so the role line and buttons stay readable. */}
       <canvas
         ref={ref}
+        aria-hidden
         className="absolute inset-0 size-full opacity-0 transition-opacity duration-700 group-data-[state=running]:opacity-100"
       />
+      {/* Reveal toggle over the figure. It sits under the hero content (-z-10), so it never blocks the hero's own links.
+          Mouse: hover reveals. Touch, Enter or Space: toggle. */}
+      {hydrated && (
+        <button
+          type="button"
+          aria-pressed={revealed}
+          aria-label="Show my photo"
+          style={box}
+          className="portrait-box pointer-events-auto absolute left-1/2 -translate-x-1/2 cursor-pointer rounded-[1.75rem]"
+          onPointerEnter={(e) => e.pointerType === "mouse" && reveal(true)}
+          onPointerLeave={(e) => e.pointerType === "mouse" && reveal(false)}
+          onClick={(e) => {
+            // A mouse click is already covered by hover; keyboard (detail 0) and touch toggle.
+            if ((e.nativeEvent as PointerEvent).pointerType === "mouse" && e.detail > 0) return;
+            reveal(!revealRef.current);
+          }}
+        >
+          <span
+            aria-hidden
+            className={`glass absolute top-3 right-3 rounded-full px-3 py-1.5 text-xs text-bone/80 transition-opacity duration-500 ${hintGone ? "opacity-0" : ""}`}
+          >
+            <span className="pointer-coarse:hidden">Hover to reveal</span>
+            <span className="hidden pointer-coarse:inline">Tap to reveal</span>
+          </span>
+        </button>
+      )}
     </div>
   );
 }
