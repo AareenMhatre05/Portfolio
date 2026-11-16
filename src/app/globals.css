@@ -129,6 +129,23 @@ section[id] {
     will-change: transform;
   }
 
+  /* Intro overlay: only shown when the head script set data-intro, so never without JS. */
+  .intro {
+    display: none;
+  }
+  html[data-intro="play"] {
+    overflow: hidden;
+  }
+  html[data-intro="play"] .intro {
+    display: grid;
+  }
+  /* Hidden until GSAP animates them, so a slow hydrate shows a black screen, not static letters. */
+  .intro [data-letter],
+  .intro [data-ball],
+  .intro [data-final] {
+    opacity: 0;
+  }
+
   /* Service accordion: native <details>, arrow points ↘ closed and ↗ open. */
   .service summary::-webkit-details-marker {
     display: none;

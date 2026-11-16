@@ -138,7 +138,7 @@ export default function HeroPortrait() {
     };
     const onLeave = () => { mouse.x = mouse.y = -1e4; };
 
-    img.decode().then(() => {
+    const go = () => {
       if (!alive) return;
       build();
       box.dataset.state = "running";
@@ -146,10 +146,16 @@ export default function HeroPortrait() {
       ro.observe(canvas);
       addEventListener("pointermove", onMove, { passive: true });
       document.documentElement.addEventListener("pointerleave", onLeave);
+    };
+    img.decode().then(() => {
+      // While the intro plays, wait so the starfield fades in after it rather than behind it.
+      if (document.documentElement.dataset.intro === "play") addEventListener("intro:done", go, { once: true });
+      else go();
     }).catch(() => { /* photo failed to load: static fallback stays */ });
 
     return () => {
       alive = false;
+      removeEventListener("intro:done", go);
       stop();
       io.disconnect();
       ro.disconnect();
@@ -164,7 +170,7 @@ export default function HeroPortrait() {
       {/* Static fallback: dimmed photo, hidden once the particles run. Box matches the photo so the fade hides its edges. */}
       <div
         style={{ aspectRatio: `${portrait.width} / ${portrait.height}` }}
-        className="absolute bottom-0 left-1/2 h-full max-w-full -translate-x-1/2 opacity-20 grayscale [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_35%,transparent_72%)] group-data-[state=running]:opacity-0"
+        className="absolute bottom-0 left-1/2 h-full max-w-full -translate-x-1/2 opacity-20 grayscale [mask-image:radial-gradient(ellipse_55%_60%_at_50%_40%,#000_40%,transparent_75%)] group-data-[state=running]:opacity-0"
       >
         <Image
           src={portrait.src}

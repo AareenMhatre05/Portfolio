@@ -8,10 +8,12 @@ import Experience from "@/components/Experience";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import Motion from "@/components/Motion";
+import Intro from "@/components/Intro";
 
 export default function Home() {
   return (
     <>
+      <Intro />
       <Navbar />
       <main>
         <Hero />

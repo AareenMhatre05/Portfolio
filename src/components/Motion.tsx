@@ -20,7 +20,14 @@ function smoothScroll(): Cleanup {
   const tick = (time: number) => lenis.raf(time * 1000);
   gsap.ticker.add(tick);
   gsap.ticker.lagSmoothing(0);
+  // Scroll stays locked while the intro plays.
+  const resume = () => lenis.start();
+  if (document.documentElement.dataset.intro === "play") {
+    lenis.stop();
+    addEventListener("intro:done", resume, { once: true });
+  }
   return () => {
+    removeEventListener("intro:done", resume);
     gsap.ticker.remove(tick);
     gsap.ticker.lagSmoothing(500, 33);
     lenis.destroy();
