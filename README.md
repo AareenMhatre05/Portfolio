@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Aareen Mhatre: Portfolio
 
-## Getting Started
+My personal portfolio site: who I am, what I work on, the projects I've built, and how to reach me.
 
-First, run the development server:
+## What's on the site
+
+- **Hero:** a starfield that gathers into a dot-matrix portrait of me. Hover it (or tap on a phone) to reveal the photo.
+- **About:** a short introduction with a photo.
+- **Stack:** the languages, tools and platforms I use.
+- **What I do:** backend and databases, mobile and web apps, data and machine learning.
+- **Projects:** each with a short summary, its stack and a link to the code.
+- **Experience and education:** degree, roles and certifications.
+- **Contact:** email, LinkedIn, GitHub and a downloadable résumé.
+
+A short intro animation plays on load. Motion follows the system's "reduce motion" setting, and the content stays readable with JavaScript turned off.
+
+## Built with
+
+- [Next.js](https://nextjs.org) (App Router) with TypeScript
+- [Tailwind CSS](https://tailwindcss.com)
+- [GSAP](https://gsap.com) with ScrollTrigger and SplitText for scroll animations
+- [Lenis](https://lenis.darkroom.engineering) for smooth scrolling
+- Canvas 2D for the particle portrait, and WebGL for the contact section's smoke background
+
+## Run it locally
+
+You need Node.js 20 or newer.
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To check a production build:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## Editing the content
 
-To learn more about Next.js, take a look at the following resources:
+All the text, links, skills, projects and experience are in [`src/data.ts`](src/data.ts), so you can update the site without touching the components. Images are in [`public/`](public):
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `me.png`: the cut-out photo used for the hero portrait. The crop and face boxes for it are also set in `src/data.ts`.
+- `about.jpg`: the photo in the About section.
+- `resume.pdf`: the résumé behind the download buttons.
+- `projects/`: project screenshots.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## License
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[MIT](LICENSE) © 2026 Aareen Mhatre
